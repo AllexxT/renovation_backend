@@ -11,6 +11,7 @@ pip = "*"
 install = "*"
 django-rest-swagger = "*"
 ipython = "*"
+twilio = "*"
 
 [dev-packages]
 

@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
+from accounts.models import SMSModel
+
 User = get_user_model()
 
 
@@ -17,3 +19,5 @@ class CustomUserAdmin(UserAdmin):
     )
     date_hierarchy = 'date_joined'
     ordering = ('-date_joined', )
+
+admin.site.register(SMSModel)
