@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
-from accounts.serializators import UserSerializer
+from accounts.serializers import UserSerializer
 from base.services import Service
+from accounts import serializers
+
 UserModel = get_user_model()
 
 
@@ -32,8 +35,31 @@ class UserRegistrationService(Service):
         self.data["access_token"] = str(refresh.access_token)
         self.data["refresh_token"] = str(refresh)
 
+
 class UserLoginService(Service):
-    pass
+
+    def __init__(self, user):
+        self._user = user
+        self.data = {}
+
+    def execute(self):
+        self._generate_refresh_token()
+        self._set_last_login()
+        self._serializer_user()
+        return self.data
+
+    def _generate_refresh_token(self):
+        from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+        refresh = TokenObtainPairSerializer.get_token(self._user)
+        self.data["access_token"] = str(refresh.access_token)
+        self.data["refresh_token"] = str(refresh)
+
+    def _set_last_login(self):
+        self._user.last_login = timezone.now()
+        self._user.save(update_fields=["last_login"])
+
+    def _serializer_user(self):
+        self.data["user"] = serializers.UserSerializer(self._user).data
 
 class UserTokenService(Service):
     pass
