@@ -7,7 +7,8 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from accounts.serializers import UserSerializer, SMSModelSerializer, LogoutSerializer, LoginSerializer
+from accounts.serializers import UserSerializer, SMSModelSerializer, LogoutSerializer, LoginSerializer, \
+    PhoneNumberSerializer
 from accounts.services import UserRegistrationService, UserLoginService
 
 
@@ -50,3 +51,18 @@ class SMSView(views.APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class PhoneNumberView(views.APIView):
+    def patch(self, request):
+        serializer = PhoneNumberSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class SomeInfoView(views.APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        return Response({"detail": "Some info for registered users"})

@@ -12,6 +12,7 @@ class CustomUserAdmin(UserAdmin):
     list_display = (
         'email',
         'username',
+        'phone_number',
         'business_name',
         'date_joined',
         'last_login',

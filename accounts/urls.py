@@ -11,7 +11,10 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name="login"),
     path('register/', views.RegisterView.as_view(), name="register"),
     path('logout/', views.LogoutView.as_view(), name="logout"),
-    path('sms_test/', views.SMSView.as_view(), name="logout")
+    path('sms_test/', views.SMSView.as_view(), name="logout"),
+    path('phone/', views.PhoneNumberView.as_view(), name="phone"),
+    path('info/', views.SomeInfoView.as_view(), name="info"),
+
 ]
 
 

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import UserManager, AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 from twilio.rest import Client
 
 
@@ -37,6 +38,18 @@ class User(AbstractUser):
     business_name = models.CharField(
         _('Business name'), max_length=64, blank=True
     )
+
+    phone_number = PhoneNumberField(
+        _("Phone number"),
+        max_length=17,
+        blank=True,
+        null=True,
+        unique=True
+    )
+
+    @property
+    def get_number(self):
+        return self.phone_number.as_e164
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

@@ -12,8 +12,12 @@ install = "*"
 django-rest-swagger = "*"
 ipython = "*"
 twilio = "*"
+phonenumbers = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.8"
+
+[packages.django-phonenumber-field]
+extras = [ "phonenumbers",]

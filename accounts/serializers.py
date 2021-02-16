@@ -1,4 +1,5 @@
 from django.contrib.auth import password_validation
+from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers, exceptions
 from twilio.rest import Client
 
@@ -6,6 +7,8 @@ from accounts.models import User, SMSModel
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(max_length=128, write_only=True)
+
     class Meta:
         model = User
         fields = [
@@ -30,14 +33,14 @@ class SMSModelSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data.get("number") < 20:
             account_sid = "AC05755a0649f04630367561dfa6ff10f4"
-            auth_token = "9608af3ee71e120bf1e1970263a73861"
+            auth_token = "ae0caa03280e465c5f265840ab36e133"
             client = Client(account_sid, auth_token)
 
             try:
                 message = client.messages.create(
                     body='Test Message',
                     from_='+15707558188',
-                    to='+380682724293'
+                    to='+15628024809'
                 )
                 print(message)
             except Exception as e:
@@ -61,3 +64,29 @@ class LoginSerializer(serializers.Serializer):
 
 class LogoutSerializer(serializers.Serializer):
     refresh_token = serializers.CharField(max_length=256)
+
+
+class PhoneSerializer(serializers.Serializer):
+    phone = PhoneNumberField()
+
+
+class PhoneNumberSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    phone = PhoneNumberField(source="phone_number")
+
+    def validate(self, attrs):
+        self._user = User.objects.filter(email=attrs.get("email")).first()
+        if not self._user:
+            raise exceptions.ValidationError("User doesn't exist")
+        self._user.phone_number = attrs.get("phone_number")
+        self._user.save()
+        return attrs
+
+    class Meta:
+        model = User
+        fields = ("phone", "email")
+
+
+# raise exceptions.ValidationError(
+#     detail={"detail": f"Twilio: {ex}"},
+# )

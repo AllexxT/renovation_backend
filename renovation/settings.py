@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework_swagger',
     'rest_framework',
-    'accounts'
+    'accounts',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,6 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
+
+PHONENUMBER_DB_FORMAT = "INTERNATIONAL"
+
